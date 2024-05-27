@@ -12,7 +12,7 @@ export const FormContainer = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 0px 2.5px rgba(15, 15, 15, 0.19);
+  box-shadow: 0px 0px 0px rgba(15, 15, 15, 0.19);
 `
 
 export const MutedLink = styled.a`
@@ -36,7 +36,6 @@ export const Input = styled.input`
   outline: none;
   border: 1px solid rgba(200, 200, 200, 0.3);
   padding: 0px 10px;
-  border-bottom: 1.4px solid transparent;
   transition: all 200ms ease-in-out;
   font-size: 12px;
 
@@ -56,7 +55,7 @@ export const Input = styled.input`
 
 export const SubmitButton = styled.button`
   width: 100%;
-  padding: 11px 40%;
+  padding: 11px 30%;
   color: #fff;
   font-size: 15px;
   font-weight: 600;
@@ -75,3 +74,60 @@ export const SubmitButton = styled.button`
     filter: brightness(1.03);
   }
 `
+
+export const AppContainer = styled.div`
+width: 100vw;
+height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+`;
+
+export const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-top: 5px;
+`
+
+export const CheckboxInput = styled.input`
+  margin-right: 10px;
+  margin-top: 2px;
+  appearance: none; /* Hide default checkbox */
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+
+  &:checked {
+    background-color: rgba(35, 196, 146, 1);
+    border-color: rgba(35, 196, 146, 1);
+  }
+
+  &:checked::before {
+    content: '\u2713'; /* Checkmark symbol */
+    display: block;
+    text-align: center;
+    line-height: 20px; /* Center vertically */
+    font-size: 16px;
+    color: white; /* Checkmark color */
+  }
+`
+
+export const CheckboxText = styled.span`
+  font-size: 12px;
+  color: rgba(200, 200, 200, 0.8);
+`
+export const CircularImage = styled.img`
+  border-radius: 50%;
+  overflow: hidden;
+  text-align: center;
+  z-index: 10;
+  height: 180px;
+  width: 180px;
+`;
+
+

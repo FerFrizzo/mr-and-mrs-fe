@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { LoginForm } from "./loginForm";
 import { motion } from "framer-motion";
-import { SignupForm } from "./signupForm";
-import { AccountContext } from "./accountContext";
+import { AccountContext } from "./AccountContext";
 import { SocialLogin } from "./socialLogin";
+import LoginForm from "./loginForm";
+import { SignupForm } from "./signupForm";
+import { CircularImage } from "./Common";
+import ForgotPassword from "./ForgotPassword";
+
 
 const BoxConteiner = styled.div`
   width: 280px;
@@ -19,6 +22,7 @@ const BoxConteiner = styled.div`
 `
 
 const TopContainer = styled.div`
+  margin-top: 30px;
   width: 100%;
   height: 250px;
   display: flex;
@@ -46,13 +50,7 @@ const BackDrop = styled(motion.div)`
   );
 `
 
-const HeaderContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`
-
-const HeaderText = styled.h2`
+export const HeaderText = styled.h2`
   font-size: 30px;
   font-weight: 600;
   line-height: 1.24;
@@ -61,7 +59,7 @@ const HeaderText = styled.h2`
   margin: 0;
 `
 
-const SmallText = styled.h5`
+export const SmallText = styled.h5`
   color: #fff;
   font-weight: 500;
   font-size: 11px;
@@ -74,6 +72,13 @@ export const SmallGrayText = styled.h5`
   font-size: 11px;
   color: rgba(200, 200, 200, 0.8);
   font-weight: 500;
+`
+
+export const SmallRedText = styled.h5`
+  font-size: 11px;
+  color: rgba(255, 0, 0, 0.8);
+  font-weight: 500;
+  font-weight: bold;
 `
 
 const InnerContainer = styled.div`
@@ -104,6 +109,14 @@ const expandingTransition = {
   stiffness: 30,
 }
 
+interface ImageProps {
+  imageUrl: string;
+}
+
+const ImageWithCircularMask: React.FC<ImageProps> = ({ imageUrl }) => {
+  return <CircularImage src={imageUrl} />;
+};
+
 export function AccountBox() {
   const [isExpanded, setExpanded] = useState(false)
   const [active, setActive] = useState("signin")
@@ -129,7 +142,14 @@ export function AccountBox() {
     }, 400)
   }
 
-  const contextValue = { switchtoSignup, switchtoSignin }
+  const switchToForgotPassword = () => {
+    playExpandingAnimation()
+    setTimeout(() => {
+      setActive("forgot")
+    }, 400)
+  }
+
+  const contextValue = { switchtoSignup, switchtoSignin, switchToForgotPassword }
 
   return (
     <AccountContext.Provider value={contextValue}>
@@ -140,27 +160,32 @@ export function AccountBox() {
             animate={isExpanded ? "expanded" : "collapsed"}
             variants={BackDropVariants}
             transition={expandingTransition} />
-          {active === "signin" && <HeaderContainer>
-            <HeaderText> Welcome to </HeaderText>
-            <HeaderText> Mr & Mrs </HeaderText>
-            <SmallText> Please sign-in to continue! </SmallText>
-          </HeaderContainer>}
+          <div style={{ position: 'relative', marginTop: '30px' }} >
+            <ImageWithCircularMask imageUrl={require('../../assets/logo.jpg')} />
+          </div>
+          {/* {active === "signin" &&
+            <HeaderContainer>
+              <HeaderText> Welcome to</HeaderText>
+              <HeaderText> Mr & Mrs </HeaderText>
+              <SmallText> Please sign-in to continue! </SmallText>
+            </HeaderContainer>}
           {active === "signup" && <HeaderContainer>
             <HeaderText> Create </HeaderText>
             <HeaderText> Account </HeaderText>
             <SmallText> Please sign-up to continue! </SmallText>
-          </HeaderContainer>}
+          </HeaderContainer>} */}
         </TopContainer>
         <InnerContainer>
           {active === "signin" && <LoginForm />}
           {active === "signup" && <SignupForm />}
+          {active === "forgot" && <ForgotPassword />}
         </InnerContainer>
-        <InnerContainer>
+        {/* <InnerContainer>
           <SmallGrayText> --- or continue with --- </SmallGrayText>
           <SocialLogin />
-        </InnerContainer>
+        </InnerContainer> */}
 
       </BoxConteiner>
-    </AccountContext.Provider>
+    </AccountContext.Provider >
   );
 }

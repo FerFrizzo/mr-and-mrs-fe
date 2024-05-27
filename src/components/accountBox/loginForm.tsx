@@ -1,22 +1,28 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { BoldLink, BoxContainer, FormContainer, Input, MutedLink, SubmitButton } from "./common";
+import { BoldLink, BoxContainer, CheckboxInput, CheckboxLabel, CheckboxText, FormContainer, Input, MutedLink, SubmitButton } from "./Common";
 import { Marginer } from "../marginer";
-import { AccountContext } from "./accountContext";
 import useAuth from "../../hooks/useAuth";
 import Axios from "../../api/Axios";
+import { AccountContext } from "./AccountContext";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const LOGIN_URL = '/auth'
 
-export function LoginForm() {
-  const { switchtoSignup } = useContext(AccountContext);
-  const { auth, setAuth } = useAuth();
+const LoginForm = () => {
+  const { switchtoSignup, switchToForgotPassword } = useContext(AccountContext);
+  // const { switchToForgotPassword } = useContext(AccountContext);
+  const { setAuth, persist, setPersist } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
   const emailRef = useRef<HTMLInputElement>(null);
   const errRef = useRef<HTMLInputElement>(null);
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errMsg, setErrMsg] = useState('')
-  const [success, setSuccess] = useState(false)
+  // const [success, setSuccess] = useState(false)
 
   useEffect(() => {
     setErrMsg('')
@@ -24,7 +30,7 @@ export function LoginForm() {
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault()
-
+    console.log('email', email, password)
     try {
       const response = await Axios.post(
         LOGIN_URL,
@@ -45,10 +51,10 @@ export function LoginForm() {
         accessToken
       });
 
-
       setEmail('')
       setPassword('')
-      setSuccess(true)
+      navigate(from, { replace: true })
+
     } catch (error: any) {
       if (!error?.response) {
         console.log(error)
@@ -62,48 +68,58 @@ export function LoginForm() {
       }
       errRef.current?.focus()
     }
-
-
   }
+
+  const togglePersist = () => {
+    setPersist(!persist);
+  }
+
+  useEffect(() => {
+    if (persist) {
+      localStorage.setItem('persist', JSON.stringify(persist));
+    } else {
+      localStorage.removeItem('persist');
+    }
+  }, [persist])
 
   return (
     <>
-      {success ? (
-        <>
-          <p>You are logged in</p>
-          <br />
-          <p>
-            <BoldLink href="#">Go to Home</BoldLink>
-          </p>
-        </>
-      ) : (
-        <BoxContainer>
-          <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
-          <FormContainer>
-            <Input
-              type="email"
-              placeholder="Email"
-              ref={emailRef}
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              required
+      <BoxContainer>
+        <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"}>{errMsg}</p>
+        <FormContainer>
+          <Input
+            type="email"
+            placeholder="Email"
+            ref={emailRef}
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            required
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            required
+          />
+          <CheckboxLabel>
+            <CheckboxInput
+              type="checkbox"
+              checked={persist}
+              onChange={togglePersist}
             />
-            <Input
-              type="password"
-              placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              required
-            />
-          </FormContainer>
-          <Marginer direction="vertical" margin={10} />
-          <MutedLink href="#">Forgot your password?</MutedLink>
-          <Marginer direction="vertical" margin="1.6em" />
-          <SubmitButton type="submit" onClick={handleSubmit}>SignIn</SubmitButton>
-          <Marginer direction="vertical" margin="1em" />
-          <MutedLink href="#">Don't have an account? <BoldLink href="#" onClick={switchtoSignup}> Signup</BoldLink></MutedLink>
-        </BoxContainer>
-      )}
+            <CheckboxText>Remember me</CheckboxText>
+          </CheckboxLabel>
+        </FormContainer>
+        <Marginer direction="vertical" margin={10} />
+        <MutedLink href="#" onClick={switchToForgotPassword}>Forgot your password?</MutedLink>
+        <Marginer direction="vertical" margin="1.6em" />
+        <SubmitButton type="submit" onClick={handleSubmit}>SignIn</SubmitButton>
+        <Marginer direction="vertical" margin="1em" />
+        <MutedLink>Don't have an account? <BoldLink href="#" onClick={switchtoSignup}> Signup</BoldLink></MutedLink>
+      </BoxContainer>
     </>
   )
 }
+
+export default LoginForm;

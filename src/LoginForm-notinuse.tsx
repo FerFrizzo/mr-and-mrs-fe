@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { AccountBox } from "./components/accountBox";
+import { AccountBox } from "./components/accountBox/Home";
 
 // interface LoginFormProps {
 //   onLogin: (email: string, password: string) => void;

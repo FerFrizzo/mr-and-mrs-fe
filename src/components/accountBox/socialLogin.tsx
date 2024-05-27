@@ -5,9 +5,9 @@ import { IResolveParams } from 'reactjs-social-login/dist/index.d';
 import { Marginer } from '../marginer';
 
 const REDIRECT_URI = window.location.href;
-const client_id = '56270461773-7737mfdq2btcfno4nnran8sia74dnkj3.apps.googleusercontent.com'
+const REACT_APP_GOOGLE_CLIENT_ID = '56270461773-7737mfdq2btcfno4nnran8sia74dnkj3.apps.googleusercontent.com'
 
-type Provider = 'facebook' | 'google' | 'instagram' | 'apple'
+type Provider = 'google'
 
 export type Profile = {
   accessToken: string,
@@ -40,7 +40,7 @@ export const SocialLogin = () => {
       {/* <Marginer direction="vertical" margin={15} /> */}
       <LoginSocialGoogle
         isOnlyGetToken={false}
-        client_id={client_id}
+        client_id={REACT_APP_GOOGLE_CLIENT_ID}
         onLoginStart={onLoginStart}
         redirect_uri={REDIRECT_URI}
         onResolve={({ provider, data }: IResolveParams) => {
@@ -75,7 +75,6 @@ export const SocialLogin = () => {
           setProfile(googleData)
         }}
         onReject={(err) => {
-          alert('error')
           console.log(err)
         }}
       >

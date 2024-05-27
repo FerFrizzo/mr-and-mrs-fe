@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { BoldLink, BoxContainer, FormContainer, Input, MutedLink, SubmitButton } from "./common";
+import { BoldLink, BoxContainer, FormContainer, Input, MutedLink, SubmitButton } from "./Common";
 import { Marginer } from "../marginer";
-import { AccountContext } from "./accountContext";
+import { AccountContext } from "./AccountContext";
 import axios from '../../api/Axios'
 
 const EMAIL_REGEX = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/
